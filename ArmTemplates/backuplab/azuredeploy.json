@@ -21,7 +21,7 @@
         "SubnetRef": "[concat(variables('vnetID'), '/subnets/', variables('subnetName'))]",
         "networkInterfaceName": "[concat(parameters('virtualMachineName'), '-nic0')]",
         "osDiskType": "StandardSSD_LRS",
-        "virtualMachineSize": "Standard_D2s_v3",
+        "virtualMachineSize": "Standard_A2_v2",
         "vaultname": "[concat('recoveryvault', uniquestring(resourceGroup().id))]",
         "vmDiagnosticsStorageAccountName": "[concat('storage', uniquestring(resourceGroup().id))]"
     },
