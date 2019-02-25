@@ -21,7 +21,8 @@
         "SubnetRef": "[concat(variables('vnetID'), '/subnets/', variables('subnetName'))]",
         "networkInterfaceName": "[concat(parameters('virtualMachineName'), '-nic0')]",
         "osDiskType": "StandardSSD_LRS",
-        "virtualMachineSize": "Standard_A1_v2"
+        "virtualMachineSize": "Standard_A1_v2",
+        "vaultname": "[concat('recoveryvault', uniquestring(resourceGroup().id))]"
     },
     "resources": [
         {
@@ -43,6 +44,17 @@
                 ]
             },
             "tags": {}
+        },
+        {
+            "apiVersion": "2016-06-01",
+            "type": "Microsoft.RecoveryServices/vaults",
+            "location": "[variables('location')]",
+            "name": "[variables('vaultName')]",
+            "sku": {
+              "name": "RS0",
+              "tier": "Standard"
+            },
+            "properties": {}
         },
         {
             "name": "[parameters('virtualMachineName')]",
