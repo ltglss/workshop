@@ -21,8 +21,9 @@
         "SubnetRef": "[concat(variables('vnetID'), '/subnets/', variables('subnetName'))]",
         "networkInterfaceName": "[concat(parameters('virtualMachineName'), '-nic0')]",
         "osDiskType": "StandardSSD_LRS",
-        "virtualMachineSize": "Standard_A1_v2",
-        "vaultname": "[concat('recoveryvault', uniquestring(resourceGroup().id))]"
+        "virtualMachineSize": "Standard_D2s_v3",
+        "vaultname": "[concat('recoveryvault', uniquestring(resourceGroup().id))]",
+        "vmDiagnosticsStorageAccountName": "[concat('storage', uniquestring(resourceGroup().id))]"
     },
     "resources": [
         {
@@ -56,6 +57,15 @@
             },
             "properties": {}
         },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[variables('vmDiagnosticsStorageAccountName')]",
+            "apiVersion": "2015-05-01-preview",
+            "location": "[variables('location')]",
+            "properties": {
+              "accountType": "Standard_LRS"
+            }
+          },
         {
             "name": "[parameters('virtualMachineName')]",
             "type": "Microsoft.Compute/virtualMachines",
@@ -103,7 +113,13 @@
                             ]
                         }
                     }
-                }
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                      "enabled": "true",
+                      "storageUri": "[concat('http://',variables('vmDiagnosticsStorageAccountName'),'.blob.core.windows.net')]"
+                    }
+                  }
             },
             "plan": {
                 "name": "20160228",
